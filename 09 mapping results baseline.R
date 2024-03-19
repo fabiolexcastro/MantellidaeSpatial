@@ -7,6 +7,9 @@ g <- gc(reset = T)
 rm(list = ls())
 options(scipen = 999, warn = -1)
 
+## Fit the font 
+windowsFonts(`Segoe UI` = windowsFont('Segoe UI'))
+
 # Load data ---------------------------------------------------------------
 
 ## Raster data -----------
@@ -93,7 +96,7 @@ ggp <- ggplot() +
   labs(
     x = 'Lon', 
     y = 'Lat', 
-    fill = 'Suitability score'
+    fill = 'Suitability\nscore'
   ) + 
   coord_sf(
     xlim = ext(adm1)[1:2], 
@@ -102,25 +105,33 @@ ggp <- ggplot() +
   theme_light() + 
   theme(
     plot.title = element_text(face = 'bold', hjust = 0.5), 
-    axis.text.y = element_text(size = 3.4, angle = 90, hjust = 0.5), 
-    axis.text.x = element_text(size = 3.4),
+    axis.text.y = element_text(size = 4.4, angle = 90, hjust = 0.5), 
+    axis.text.x = element_text(size = 4.4),
     text = element_text(family = 'Segoe UI'),
-    legend.position = 'bottom', 
-    legend.key.width = unit(3, 'line')
+    legend.position = 'right'
+  ) + 
+  guides(
+    fill = guide_legend(
+      direction = 'vertical',
+      keyheight = unit(14, units = 'mm'), 
+      title.position = 'top', 
+      title.hjust = 0.5
+    )
   ) +
-  guides(fill = guide_legend( 
-    direction = 'horizontal',
-    keyheight = unit(1.15, units = "mm"),
-    keywidth = unit(13, units = "mm"),
-    title.position = 'top',
-    title.hjust = 0.5,
-    label.hjust = .5,
-    nrow = 1,
-    byrow = T,
-    reverse = F,
-    label.position = "bottom"
-  ))
+  annotation_scale( 
+    location =  "br", width_hint = 0.3, text_col = 'grey60', bar_cols = c('grey60', 'grey99'), line_width = 0.1
+  ) +
+  annotation_north_arrow(
+    location = "tl", which_north = "true", 
+    pad_x = unit(0.08, "in"), pad_y = unit(0.12, "in"), 
+    style = north_arrow_fancy_orienteering(
+      text_col = 'grey40', 
+      line_col = 'grey60', 
+      fill = c('grey60', 'grey99')
+    )
+  ) 
 
 ggp
+ggsave(plot = ggp, filename = './png/maps/suitability/suitability_current-average_run1.jpg', units = 'in', width = 5.5, height = 8, dpi = 300)
 
-ggsave(plot = ggp, filename = './png/maps/suitability/suitability_current-average_run1.jpg', units = 'in', width = 6.5, height = 11, dpi = 300)
+
